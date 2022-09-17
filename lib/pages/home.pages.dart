@@ -9,8 +9,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  double peso = 0.0;
-  int edad =0;
+  double peso = 70.0;
+  int edad =20;
+  double _currentSliderValue = 150;
 
   @override
   Widget build(BuildContext context) {
@@ -65,23 +66,42 @@ class _HomePageState extends State<HomePage> {
                 ]),
             )
           ),
-          Expanded( //1 largo
+          Expanded( //Altura -slider
             flex : 3,
-            child: Container(
-              
-              child: Row(children: [
-                Expanded( child: Padding(padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(10.0),
-                      ),),
-                )
+            child: Container(              
+              child: Row(
+                children: [
+                Expanded( child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: Container(
+                    decoration: BoxDecoration( color: Colors.grey,
+                                         borderRadius: BorderRadius.circular(10.0),
+                      ),                      
+                      child: Column(children: [
+                        Text("Altura"),
+                        Text(_currentSliderValue.round().toString()+ " cm", style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold)),
+                        Slider(value: _currentSliderValue,
+                        inactiveColor: Color.fromARGB(255, 229, 229, 229),
+                        activeColor: Colors.pink,
+                        min: 50,
+                        max: 250,
+                        divisions: 200,
+                        label: _currentSliderValue.round().toString(),
+                        onChanged: (double value) {
+                          setState(() {
+                            _currentSliderValue = value;
+                          });
+                        },
+                      )
+                      ]),
+                      ),
+                )           
                 
                 )]),
             )
-          ),
-        
+          ),        
           Expanded( // Peso y edad
           flex : 3,
             child: Container(
@@ -96,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Text("Peso"),
                         Text(peso.toString()+ " Kg", style: TextStyle(
-                          fontSize: 40,
+                          fontSize: 30,
                           fontWeight: FontWeight.bold),),
                         
                         Row(
@@ -139,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Text("Edad"),
                         Text(edad.toString()+" Años", style: TextStyle(
-                          fontSize: 40,
+                          fontSize: 30,
                           fontWeight: FontWeight.bold),),
                         
                         Row(
@@ -170,19 +190,31 @@ class _HomePageState extends State<HomePage> {
                   ),
                 )                
                 )
-
-
-
                 ]),
             )
           ),
           GestureDetector( //1 largo
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: ((context)=>Detallepage())));
-            },
+              var valorCalculado=peso/(_currentSliderValue*_currentSliderValue);
+              String estado='';
+              Color colorEstado =Colors.black;
 
-            //Mi creación
-            
+              if(valorCalculado <18.5){
+                estado="Bajo peso";
+                colorEstado= Colors.orange;                
+              }
+              if(valorCalculado >=18.5 && valorCalculado<=24.9){
+                estado="Normal";
+                colorEstado= Colors.green;                
+              }
+              if(valorCalculado >24.9){
+                estado="Sobrepeso";
+                colorEstado= Colors.purple;                
+              }
+              print(valorCalculado);
+              Navigator.push(context, MaterialPageRoute(builder: ((context)=>Detallepage(valor:25,estado:estado, colorEstado:colorEstado))));
+            },
+            //Mi creación            
             child: Container(              
               height: 80,
               color: Colors.pink,
